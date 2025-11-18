@@ -36,6 +36,52 @@ class ProductEntityTest {
     }
 
     @Test
+    @DisplayName("Domain의 ID가 없으면 자동 생성")
+    void fromDomain_withNullId_autoGenerateId() {
+        // given
+        Product product = Product.create(
+                null,  // ID가 null
+                "SELLER-001",
+                "테스트 상품",
+                "테스트 설명",
+                Price.of(10000),
+                1,
+                100
+        );
+
+        // when
+        ProductEntity entity = ProductEntity.fromDomain(product);
+
+        // then
+        assertThat(entity.getProductId()).isNotNull();
+        assertThat(entity.getProductId()).isNotBlank();
+        assertThat(entity.getProductId()).hasSize(36); // UUID 표준 길이
+    }
+
+    @Test
+    @DisplayName("Domain의 ID가 빈 문자열이면 자동 생성")
+    void fromDomain_withBlankId_autoGenerateId() {
+        // given
+        Product product = Product.create(
+                "",  // ID가 빈 문자열
+                "SELLER-001",
+                "테스트 상품",
+                "테스트 설명",
+                Price.of(10000),
+                1,
+                100
+        );
+
+        // when
+        ProductEntity entity = ProductEntity.fromDomain(product);
+
+        // then
+        assertThat(entity.getProductId()).isNotNull();
+        assertThat(entity.getProductId()).isNotBlank();
+        assertThat(entity.getProductId()).hasSize(36); // UUID 표준 길이
+    }
+
+    @Test
     @DisplayName("Entity → Domain 변환")
     void toDomain() {
         // given
