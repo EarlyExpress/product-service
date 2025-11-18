@@ -82,10 +82,16 @@ public class ProductEntity extends BaseEntity {
 
     /**
      * Domain Model -> Entity 변환 (신규 생성)
+     * ID가 없으면 자동 생성
      */
     public static ProductEntity fromDomain(Product product) {
+        String productId = product.getProductId();
+        if (productId == null || productId.isBlank()) {
+            productId = com.early_express.product_service.global.common.utils.UuidUtils.generate();
+        }
+
         return ProductEntity.builder()
-                .productId(product.getProductId())
+                .productId(productId)
                 .sellerId(product.getSellerId())
                 .name(product.getName())
                 .description(product.getDescription())
