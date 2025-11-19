@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  * - Domain Model과 완전 분리
  */
 @Entity
-@Table(name = "products")
+@Table(name = "p_products")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductEntity extends BaseEntity {
@@ -29,6 +29,9 @@ public class ProductEntity extends BaseEntity {
 
     @Column(name = "seller_id", length = 36, nullable = false)
     private String sellerId;
+
+    @Column(name = "company_id", length = 36, nullable = false)
+    private String companyId;
 
     @Column(name = "name", length = 100, nullable = false)
     private String name;
@@ -59,6 +62,7 @@ public class ProductEntity extends BaseEntity {
     private ProductEntity(
             String productId,
             String sellerId,
+            String companyId,
             String name,
             String description,
             BigDecimal price,
@@ -70,6 +74,7 @@ public class ProductEntity extends BaseEntity {
     ) {
         this.productId = productId;
         this.sellerId = sellerId;
+        this.companyId = companyId;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -93,6 +98,7 @@ public class ProductEntity extends BaseEntity {
         return ProductEntity.builder()
                 .productId(productId)
                 .sellerId(product.getSellerId())
+                .companyId(product.getCompanyId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice().getAmount())
@@ -125,6 +131,7 @@ public class ProductEntity extends BaseEntity {
         return Product.reconstruct(
                 this.productId,
                 this.sellerId,
+                this.companyId,
                 this.name,
                 this.description,
                 Price.of(this.price),
