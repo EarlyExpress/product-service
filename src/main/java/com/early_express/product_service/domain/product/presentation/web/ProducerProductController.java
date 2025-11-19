@@ -51,13 +51,15 @@ public class ProducerProductController {
         }
 
         String hubId = userInfo.getHubId();
+        String companyId = userInfo.getCompanyId();
         log.info("Hub ID 조회 완료: sellerId={}, hubId={}", sellerId, hubId);
 
-        CreateProductRequest.ProductCreateCommand command = request.toCommand(sellerId, hubId);
+        CreateProductRequest.ProductCreateCommand command = request.toCommand(sellerId, hubId, companyId);
 
         Product product = productService.createProduct(
-                command.getSellerId(),
                 command.getHubId(),
+                command.getSellerId(),
+                command.getCompanyId(),
                 command.getName(),
                 command.getDescription(),
                 command.getPrice(),

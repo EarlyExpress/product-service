@@ -41,9 +41,11 @@ public class CreateProductRequest {
     /**
      * Request DTO → Domain Command Object
      */
-    public ProductCreateCommand toCommand(String sellerId, String hubId) {
+    public ProductCreateCommand toCommand(String sellerId, String hubId, String companyId) {
         return ProductCreateCommand.builder()
                 .sellerId(sellerId)
+                .companyId(companyId)
+                .hubId(hubId)
                 .name(name)
                 .description(description)
                 .price(Price.of(price))
@@ -56,6 +58,7 @@ public class CreateProductRequest {
     @Builder
     public static class ProductCreateCommand {
         private final String hubId;
+        private final String companyId;
         private final String sellerId;
         private final String name;
         private final String description;
