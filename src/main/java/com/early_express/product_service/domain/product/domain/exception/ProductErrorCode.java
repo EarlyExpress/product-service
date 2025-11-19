@@ -17,6 +17,7 @@ public enum ProductErrorCode implements ErrorCode {
     PRODUCT_NOT_FOUND("PRODUCT_001", "상품을 찾을 수 없습니다.", 404),
     CATEGORY_NOT_FOUND("PRODUCT_002", "카테고리를 찾을 수 없습니다.", 404),
     DISCOUNT_POLICY_NOT_FOUND("PRODUCT_003", "할인 정책을 찾을 수 없습니다.", 404),
+    SELLER_NOT_FOUND("PRODUCT_004", "판매자를 찾을 수 없습니다.", 404),
 
     // ===== 400 Bad Request - Validation =====
     INVALID_PRODUCT_NAME("PRODUCT_101", "상품명은 1자 이상 100자 이하여야 합니다.", 400),
@@ -29,6 +30,7 @@ public enum ProductErrorCode implements ErrorCode {
     EMPTY_IMAGES("PRODUCT_108", "최소 1개 이상의 상품 이미지가 필요합니다.", 400),
     INVALID_MIN_MAX_ORDER_QUANTITY("PRODUCT_109", "최소 주문 수량은 최대 주문 수량보다 작아야 합니다.", 400),
     INVALID_CATEGORY_HIERARCHY("PRODUCT_110", "카테고리 계층 구조가 올바르지 않습니다.", 400),
+    HUB_INFO_NOT_FOUND("PRODUCT_111", "사용자의 허브 정보를 찾을 수 없습니다.", 400),
 
     // ===== 400 Bad Request - Business Logic =====
     PRODUCT_ALREADY_DISCONTINUED("PRODUCT_201", "이미 단종된 상품입니다.", 400),
@@ -55,10 +57,12 @@ public enum ProductErrorCode implements ErrorCode {
     PRODUCT_UPDATE_FAILED("PRODUCT_502", "상품 수정에 실패했습니다.", 500),
     PRODUCT_DELETE_FAILED("PRODUCT_503", "상품 삭제에 실패했습니다.", 500),
     IMAGE_UPLOAD_FAILED("PRODUCT_504", "이미지 업로드에 실패했습니다.", 500),
+    EXTERNAL_SERVICE_ERROR("PRODUCT_505", "외부 서비스 호출 중 오류가 발생했습니다.", 500),
 
     // ===== 503 Service Unavailable - External Service =====
     INVENTORY_SERVICE_UNAVAILABLE("PRODUCT_601", "재고 서비스에 연결할 수 없습니다.", 503),
-    SELLER_SERVICE_UNAVAILABLE("PRODUCT_602", "판매자 서비스에 연결할 수 없습니다.", 503);
+    SELLER_SERVICE_UNAVAILABLE("PRODUCT_602", "판매자 서비스에 연결할 수 없습니다.", 503),
+    USER_SERVICE_UNAVAILABLE("PRODUCT_603", "사용자 서비스에 연결할 수 없습니다.", 503);
 
     private final String code;
     private final String message;
