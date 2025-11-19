@@ -44,7 +44,9 @@ class ProductEventProducerTest {
     private Product testProduct;
     private static final String TEST_PRODUCT_ID = "PROD-001";
     private static final String TEST_SELLER_ID = "SELLER-001";
+    private static final String TEST_COMPANY_ID = "COMPANY-001";
     private static final String TOPIC_NAME = "product-service-events";
+    private static final String hubId = "hub-101";
 
     @BeforeEach
     void setUp() {
@@ -53,6 +55,7 @@ class ProductEventProducerTest {
         testProduct = Product.create(
                 TEST_PRODUCT_ID,
                 TEST_SELLER_ID,
+                TEST_COMPANY_ID,
                 "테스트 상품",
                 "테스트 설명",
                 Price.of(10000),
@@ -69,12 +72,13 @@ class ProductEventProducerTest {
         @DisplayName("상품 생성 이벤트 발행 성공")
         void publishProductCreated_Success() {
             // given
+
             CompletableFuture<SendResult<String, Object>> future = CompletableFuture.completedFuture(sendResult);
             given(kafkaTemplate.send(eq(TOPIC_NAME), eq(TEST_PRODUCT_ID), any(ProductCreatedEvent.class)))
                     .willReturn(future);
 
             // when
-            eventProducer.publishProductCreated(testProduct);
+            eventProducer.publishProductCreated(testProduct, hubId);
 
             // then
             ArgumentCaptor<ProductCreatedEvent> eventCaptor = ArgumentCaptor.forClass(ProductCreatedEvent.class);
@@ -97,7 +101,7 @@ class ProductEventProducerTest {
                     .willReturn(future);
 
             // when
-            eventProducer.publishProductCreated(testProduct);
+            eventProducer.publishProductCreated(testProduct, hubId);
 
             // then
             verify(kafkaTemplate).send(eq(TOPIC_NAME), eq(TEST_PRODUCT_ID), any(ProductCreatedEvent.class));
@@ -170,7 +174,7 @@ class ProductEventProducerTest {
                     .willReturn(future);
 
             // when
-            eventProducer.publishProductCreated(testProduct);
+            eventProducer.publishProductCreated(testProduct, hubId);
             eventProducer.publishProductStatusChanged(TEST_PRODUCT_ID, ProductStatus.DRAFT, ProductStatus.ACTIVE);
 
             // then
@@ -186,7 +190,7 @@ class ProductEventProducerTest {
                     .willReturn(future);
 
             // when
-            eventProducer.publishProductCreated(testProduct);
+            eventProducer.publishProductCreated(testProduct, hubId);
             eventProducer.publishProductStatusChanged(TEST_PRODUCT_ID, ProductStatus.DRAFT, ProductStatus.ACTIVE);
 
             // then

@@ -42,6 +42,7 @@ class ProductEntityTest {
         Product product = Product.create(
                 null,  // ID가 null
                 "SELLER-001",
+                "COMPANY-001",
                 "테스트 상품",
                 "테스트 설명",
                 Price.of(10000),
@@ -65,6 +66,7 @@ class ProductEntityTest {
         Product product = Product.create(
                 "",  // ID가 빈 문자열
                 "SELLER-001",
+                "COMPANY-001",
                 "테스트 상품",
                 "테스트 설명",
                 Price.of(10000),
@@ -178,6 +180,7 @@ class ProductEntityTest {
         return Product.create(
                 "PROD-001",
                 "SELLER-001",
+                "COMPANY-001",
                 "테스트 상품",
                 "테스트 설명",
                 Price.of(10000),

@@ -8,32 +8,28 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 상품 생성 이벤트
- * - Inventory 서비스에서 초기 재고 생성용
+ * 상품 삭제(단종) 이벤트
+ * - Inventory 서비스에서 해당 상품의 모든 재고 삭제
  */
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreatedEvent {
+public class ProductDeletedEvent {
 
     private String eventId;
     private String eventType;
     private String productId;
     private String sellerId;
-    private String hubId;
-    private String name;
-    private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 
-    public static ProductCreatedEvent of(String productId, String sellerId, String hubId, String name) {
-        return ProductCreatedEvent.builder()
+    public static ProductDeletedEvent of(String productId, String sellerId) {
+        return ProductDeletedEvent.builder()
                 .eventId(java.util.UUID.randomUUID().toString())
-                .eventType("PRODUCT_CREATED")
+                .eventType("PRODUCT_DELETED")
                 .productId(productId)
                 .sellerId(sellerId)
-                .hubId(hubId)
-                .name(name)
-                .createdAt(LocalDateTime.now())
+                .deletedAt(LocalDateTime.now())
                 .build();
     }
 }

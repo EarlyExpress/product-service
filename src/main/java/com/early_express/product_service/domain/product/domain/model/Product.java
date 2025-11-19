@@ -20,6 +20,7 @@ public class Product {
 
     private final String productId;
     private final String sellerId;
+    private final String companyId;
     private String name;
     private String description;
     private Price price;
@@ -42,6 +43,7 @@ public class Product {
     private Product(
             String productId,
             String sellerId,
+            String companyId,
             String name,
             String description,
             Price price,
@@ -60,6 +62,7 @@ public class Product {
     ) {
         this.productId = productId;
         this.sellerId = sellerId;
+        this.companyId = companyId;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -83,6 +86,7 @@ public class Product {
     public static Product create(
             String productId,
             String sellerId,
+            String companyId,
             String name,
             String description,
             Price price,
@@ -95,6 +99,7 @@ public class Product {
         return Product.builder()
                 .productId(productId)
                 .sellerId(sellerId)
+                .companyId(companyId)
                 .name(name)
                 .description(description)
                 .price(price)
@@ -113,6 +118,7 @@ public class Product {
     public static Product reconstruct(
             String productId,
             String sellerId,
+            String companyId,
             String name,
             String description,
             Price price,
@@ -132,6 +138,7 @@ public class Product {
         return Product.builder()
                 .productId(productId)
                 .sellerId(sellerId)
+                .companyId(companyId)
                 .name(name)
                 .description(description)
                 .price(price)

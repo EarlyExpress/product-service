@@ -18,6 +18,7 @@ class ProductTest {
         // given
         String productId = "PROD-001";
         String sellerId = "SELLER-001";
+        String companyId = "COMPANY-001";
         String name = "테스트 상품";
         String description = "테스트 설명";
         Price price = Price.of(10000);
@@ -26,7 +27,7 @@ class ProductTest {
 
         // when
         Product product = Product.create(
-                productId, sellerId, name, description, price,
+                productId, sellerId, sellerId, name, description, price,
                 minOrderQuantity, maxOrderQuantity
         );
 
@@ -47,17 +48,18 @@ class ProductTest {
         // given
         String productId = "PROD-001";
         String sellerId = "SELLER-001";
+        String companyId = "COMPANY-001";
         Price price = Price.of(10000);
 
         // when & then
         assertThatThrownBy(() -> Product.create(
-                productId, sellerId, null, "설명", price, 1, 100
+                productId, sellerId, companyId, null, "설명", price, 1, 100
         ))
                 .isInstanceOf(ProductException.class)
                 .hasMessageContaining("상품명은 필수입니다");
 
         assertThatThrownBy(() -> Product.create(
-                productId, sellerId, "", "설명", price, 1, 100
+                productId, sellerId, companyId, "", "설명", price, 1, 100
         ))
                 .isInstanceOf(ProductException.class)
                 .extracting(e -> ((ProductException) e).getErrorCode())
@@ -70,12 +72,13 @@ class ProductTest {
         // given
         String productId = "PROD-001";
         String sellerId = "SELLER-001";
+        String companyId = "COMPANY-001";
         String tooLongName = "a".repeat(101);
         Price price = Price.of(10000);
 
         // when & then
         assertThatThrownBy(() -> Product.create(
-                productId, sellerId, tooLongName, "설명", price, 1, 100
+                productId, sellerId, companyId, tooLongName, "설명", price, 1, 100
         ))
                 .isInstanceOf(ProductException.class)
                 .hasMessageContaining("100자 이하");
@@ -87,11 +90,12 @@ class ProductTest {
         // given
         String productId = "PROD-001";
         String sellerId = "SELLER-001";
+        String companyId = "COMPANY-001";
         Price price = Price.of(10000);
 
         // when & then
         assertThatThrownBy(() -> Product.create(
-                productId, sellerId, "상품", "설명", price, 100, 10
+                productId, sellerId, companyId, "상품", "설명", price, 100, 10
         ))
                 .isInstanceOf(ProductException.class)
                 .hasMessageContaining("최소 주문 수량")
@@ -324,6 +328,7 @@ class ProductTest {
         return Product.create(
                 "PROD-001",
                 "SELLER-001",
+                "COMPANY-001",
                 "테스트 상품",
                 "테스트 설명",
                 Price.of(10000),
