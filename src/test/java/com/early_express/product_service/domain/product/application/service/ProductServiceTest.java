@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -66,6 +65,7 @@ class ProductServiceTest {
         @DisplayName("상품 생성 성공")
         void createProduct_Success() {
             // given
+            String hubId = "hub-101";
             given(productRepository.save(any(Product.class)))
                     .willAnswer(invocation -> {
                         Product product = invocation.getArgument(0);
@@ -86,6 +86,7 @@ class ProductServiceTest {
 
             // when
             Product result = productService.createProduct(
+                    hubId,
                     TEST_SELLER_ID,
                     TEST_PRODUCT_NAME,
                     "상품 설명",
@@ -102,19 +103,21 @@ class ProductServiceTest {
             assertThat(result.isSellable()).isFalse();
 
             verify(productRepository).save(any(Product.class));
-            verify(eventPublisher).publishProductCreated(any(Product.class));
+            verify(eventPublisher).publishProductCreated(any(Product.class), eq(hubId));
         }
 
         @Test
         @DisplayName("상품 생성 시 ProductCreatedEvent 발행")
         void createProduct_PublishesEvent() {
             // given
+            String hubId = "hub-101";
             given(productRepository.save(any(Product.class)))
                     .willReturn(testProduct);
-            willDoNothing().given(eventPublisher).publishProductCreated(any(Product.class));
+            willDoNothing().given(eventPublisher).publishProductCreated(any(Product.class), eq(hubId));
 
             // when
             productService.createProduct(
+                    hubId,
                     TEST_SELLER_ID,
                     TEST_PRODUCT_NAME,
                     "상품 설명",
@@ -124,7 +127,7 @@ class ProductServiceTest {
             );
 
             // then
-            verify(eventPublisher).publishProductCreated(any(Product.class));
+            verify(eventPublisher).publishProductCreated(any(Product.class), eq(hubId));
         }
     }
 
