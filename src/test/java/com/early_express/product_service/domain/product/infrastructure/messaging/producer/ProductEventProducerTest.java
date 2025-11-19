@@ -44,6 +44,7 @@ class ProductEventProducerTest {
     private Product testProduct;
     private static final String TEST_PRODUCT_ID = "PROD-001";
     private static final String TEST_SELLER_ID = "SELLER-001";
+    private static final String TEST_COMPANY_ID = "COMPANY-001";
     private static final String TOPIC_NAME = "product-service-events";
     private static final String hubId = "hub-101";
 
@@ -54,6 +55,7 @@ class ProductEventProducerTest {
         testProduct = Product.create(
                 TEST_PRODUCT_ID,
                 TEST_SELLER_ID,
+                TEST_COMPANY_ID,
                 "테스트 상품",
                 "테스트 설명",
                 Price.of(10000),

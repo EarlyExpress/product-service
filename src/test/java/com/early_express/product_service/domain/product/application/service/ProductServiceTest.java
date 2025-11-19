@@ -43,12 +43,13 @@ class ProductServiceTest {
     private static final String TEST_PRODUCT_ID = "PROD-001";
     private static final String TEST_SELLER_ID = "SELLER-001";
     private static final String TEST_PRODUCT_NAME = "테스트 상품";
-
+    private static final String TEST_COMPANY_ID = "COMPANY_ID";
     @BeforeEach
     void setUp() {
         testProduct = Product.create(
                 TEST_PRODUCT_ID,
                 TEST_SELLER_ID,
+                TEST_COMPANY_ID,
                 TEST_PRODUCT_NAME,
                 "테스트 상품 설명",
                 Price.of(10000),
@@ -72,6 +73,7 @@ class ProductServiceTest {
                         return Product.reconstruct(
                                 TEST_PRODUCT_ID,
                                 product.getSellerId(),
+                                product.getCompanyId(),
                                 product.getName(),
                                 product.getDescription(),
                                 product.getPrice(),
@@ -88,6 +90,7 @@ class ProductServiceTest {
             Product result = productService.createProduct(
                     hubId,
                     TEST_SELLER_ID,
+                    TEST_COMPANY_ID,
                     TEST_PRODUCT_NAME,
                     "상품 설명",
                     Price.of(10000),
@@ -119,6 +122,7 @@ class ProductServiceTest {
             productService.createProduct(
                     hubId,
                     TEST_SELLER_ID,
+                    TEST_COMPANY_ID,
                     TEST_PRODUCT_NAME,
                     "상품 설명",
                     Price.of(10000),
