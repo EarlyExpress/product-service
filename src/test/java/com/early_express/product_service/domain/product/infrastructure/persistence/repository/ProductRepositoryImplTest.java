@@ -135,7 +135,7 @@ class ProductRepositoryImplTest {
         Product product1 = createTestProduct(null, "SELLER-001");
         productRepository.save(product1);
 
-        Product product2 = Product.create(null, "SELLER-002", "노트북", "설명", Price.of(1000000), 1, 10);
+        Product product2 = Product.create(null, "SELLER-002", "COMPANY-001", "노트북", "설명", Price.of(1000000), 1, 10);
         productRepository.save(product2);
 
         // when
@@ -256,6 +256,7 @@ class ProductRepositoryImplTest {
         return Product.create(
                 productId,
                 sellerId,
+                "COMPANY-001",
                 "테스트 상품",
                 "테스트 설명",
                 Price.of(10000),
