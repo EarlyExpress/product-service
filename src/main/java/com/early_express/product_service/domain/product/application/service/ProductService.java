@@ -45,6 +45,7 @@ public class ProductService {
     public Product createProduct(
             String hubId,
             String sellerId,
+            String companyId,
             String name,
             String description,
             Price price,
@@ -54,8 +55,9 @@ public class ProductService {
         log.info("상품 생성 시작: sellerId={}, name={}", sellerId, name);
 
         Product product = Product.create(
-                null, // ID는 Repository에서 자동 생성
+                null,
                 sellerId,
+                companyId,
                 name,
                 description,
                 price,
