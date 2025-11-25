@@ -3,6 +3,10 @@ package com.early_express.product_service.domain.product.application.service;
 import com.early_express.product_service.domain.product.domain.exception.ProductErrorCode;
 import com.early_express.product_service.domain.product.domain.exception.ProductException;
 import com.early_express.product_service.domain.product.domain.messaging.ProductEventPublisher;
+import com.early_express.product_service.domain.product.domain.messaging.dto.ProductCreatedEventData;
+import com.early_express.product_service.domain.product.domain.messaging.dto.ProductDeletedEventData;
+import com.early_express.product_service.domain.product.domain.messaging.dto.ProductStatusChangedEventData;
+import com.early_express.product_service.domain.product.domain.messaging.dto.ProductUpdatedEventData;
 import com.early_express.product_service.domain.product.domain.model.Product;
 import com.early_express.product_service.domain.product.domain.model.vo.Price;
 import com.early_express.product_service.domain.product.domain.model.vo.ProductStatus;
@@ -66,7 +70,15 @@ public class ProductService {
         );
 
         Product savedProduct = productRepository.save(product);
-        eventPublisher.publishProductCreated(savedProduct, hubId);
+
+        // 이벤트 발행 (EventData 사용)
+        ProductCreatedEventData eventData = ProductCreatedEventData.of(
+                savedProduct.getProductId(),
+                savedProduct.getSellerId(),
+                hubId,
+                savedProduct.getName()
+        );
+        eventPublisher.publishProductCreated(eventData);
 
         log.info("상품 생성 완료: productId={}", savedProduct.getProductId());
 
@@ -90,8 +102,13 @@ public class ProductService {
 
         Product savedProduct = productRepository.save(product);
 
-        // 상품 수정 이벤트 발행
-        eventPublisher.publishProductUpdated(savedProduct);
+        // 이벤트 발행 (EventData 사용)
+        ProductUpdatedEventData eventData = ProductUpdatedEventData.of(
+                savedProduct.getProductId(),
+                savedProduct.getName(),
+                savedProduct.getPrice().getAmount()
+        );
+        eventPublisher.publishProductUpdated(eventData);
 
         log.info("상품 수정 완료: productId={}", productId);
 
@@ -110,8 +127,9 @@ public class ProductService {
 
         productRepository.delete(productId);
 
-        // 상품 삭제 이벤트 발행 (→ Inventory)
-        eventPublisher.publishProductDeleted(productId, sellerId);
+        // 이벤트 발행 (EventData 사용)
+        ProductDeletedEventData eventData = ProductDeletedEventData.of(productId, sellerId);
+        eventPublisher.publishProductDeleted(eventData);
 
         log.info("상품 삭제 완료: productId={}", productId);
     }
@@ -130,11 +148,7 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
 
         if (oldStatus != product.getStatus()) {
-            eventPublisher.publishProductStatusChanged(
-                    productId,
-                    oldStatus,
-                    product.getStatus()
-            );
+            publishStatusChangedEvent(productId, oldStatus, product.getStatus());
         }
 
         log.info("상품 활성화 완료: productId={}, status={}", productId, product.getStatus());
@@ -156,11 +170,7 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
 
         if (oldStatus != product.getStatus()) {
-            eventPublisher.publishProductStatusChanged(
-                    productId,
-                    oldStatus,
-                    product.getStatus()
-            );
+            publishStatusChangedEvent(productId, oldStatus, product.getStatus());
         }
 
         log.info("상품 일시중지 완료: productId={}", productId);
@@ -181,11 +191,7 @@ public class ProductService {
         product.discontinue();
         productRepository.save(product);
 
-        eventPublisher.publishProductStatusChanged(
-                productId,
-                oldStatus,
-                product.getStatus()
-        );
+        publishStatusChangedEvent(productId, oldStatus, product.getStatus());
 
         log.info("상품 단종 완료: productId={}", productId);
     }
@@ -208,11 +214,7 @@ public class ProductService {
         product.markOutOfStock();
         productRepository.save(product);
 
-        eventPublisher.publishProductStatusChanged(
-                productId,
-                oldStatus,
-                product.getStatus()
-        );
+        publishStatusChangedEvent(productId, oldStatus, product.getStatus());
 
         log.info("품절 처리 완료: productId={}", productId);
     }
@@ -235,11 +237,7 @@ public class ProductService {
         product.activate();
         productRepository.save(product);
 
-        eventPublisher.publishProductStatusChanged(
-                productId,
-                oldStatus,
-                product.getStatus()
-        );
+        publishStatusChangedEvent(productId, oldStatus, product.getStatus());
 
         log.info("품절 해제 완료: productId={}, status={}", productId, product.getStatus());
     }
@@ -384,5 +382,17 @@ public class ProductService {
     private Product findById(String productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    /**
+     * 상태 변경 이벤트 발행 헬퍼
+     */
+    private void publishStatusChangedEvent(String productId, ProductStatus oldStatus, ProductStatus newStatus) {
+        ProductStatusChangedEventData eventData = ProductStatusChangedEventData.of(
+                productId,
+                oldStatus.name(),
+                newStatus.name()
+        );
+        eventPublisher.publishProductStatusChanged(eventData);
     }
 }
