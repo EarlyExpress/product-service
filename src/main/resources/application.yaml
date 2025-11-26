@@ -69,7 +69,6 @@ spring:
       product-updated: product-updated
       product-deleted: product-deleted
       product-status-changed: product-status-changed
-
       # 구독 토픽 (Inventory → Product)
       inventory-low-stock: inventory-low-stock
       inventory-restocked: inventory-restocked
@@ -112,7 +111,7 @@ springdoc:
     oauth2-redirect-url: /swagger-ui/oauth2-redirect.html
   # 실제 서버 URL 설정 (프록시 URL)
   server:
-    url: http://localhost:4000
+    url: http://localhost:4010
 
 
 # ========================================
