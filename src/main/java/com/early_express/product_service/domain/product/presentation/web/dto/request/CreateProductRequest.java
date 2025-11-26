@@ -20,6 +20,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CreateProductRequest {
 
+    @NotBlank(message = "허브 ID는 필수입니다.")
+    private String hubId;
+
+    @NotBlank(message = "업체 ID는 필수입니다.")
+    private String companyId;
+
     @NotBlank(message = "상품명은 필수입니다.")
     private String name;
 
@@ -41,7 +47,7 @@ public class CreateProductRequest {
     /**
      * Request DTO → Domain Command Object
      */
-    public ProductCreateCommand toCommand(String sellerId, String hubId, String companyId) {
+    public ProductCreateCommand toCommand(String sellerId) {
         return ProductCreateCommand.builder()
                 .sellerId(sellerId)
                 .companyId(companyId)

@@ -1,15 +1,11 @@
 package com.early_express.product_service.domain.product.presentation.web;
 
 import com.early_express.product_service.domain.product.application.service.ProductService;
-import com.early_express.product_service.domain.product.domain.exception.ProductErrorCode;
-import com.early_express.product_service.domain.product.domain.exception.ProductException;
 import com.early_express.product_service.domain.product.domain.model.Product;
 import com.early_express.product_service.domain.product.presentation.web.dto.request.CreateProductRequest;
 import com.early_express.product_service.domain.product.presentation.web.dto.request.UpdateProductRequest;
 import com.early_express.product_service.domain.product.presentation.web.dto.response.ProductResponse;
 import com.early_express.product_service.global.presentation.dto.PageResponse;
-import com.early_express.product_service.domain.product.infrastructure.client.user.UserServiceClient;
-import com.early_express.product_service.domain.product.infrastructure.client.user.dto.UserInfoResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class ProducerProductController {
 
     private final ProductService productService;
-    private final UserServiceClient userServiceClient;
 
     /**
      * 상품 등록
@@ -38,23 +33,10 @@ public class ProducerProductController {
             @RequestHeader("X-User-Id") String sellerId,
             @Valid @RequestBody CreateProductRequest request
     ) {
-        log.info("상품 등록 요청: sellerId={}, name={}", sellerId, request.getName());
+        log.info("상품 등록 요청: sellerId={}, hubId={}, companyId={}, name={}",
+                sellerId, request.getHubId(), request.getCompanyId(), request.getName());
 
-        // User 서비스에서 Seller의 Hub ID 조회
-        UserInfoResponse userInfo = userServiceClient.getUserInfo(sellerId);
-
-        if (userInfo.getHubId() == null || userInfo.getHubId().isEmpty()) {
-            throw new ProductException(
-                    ProductErrorCode.HUB_INFO_NOT_FOUND,
-                    "사용자의 허브 정보를 찾을 수 없습니다."
-            );
-        }
-
-        String hubId = userInfo.getHubId();
-        String companyId = userInfo.getCompanyId();
-        log.info("Hub ID 조회 완료: sellerId={}, hubId={}", sellerId, hubId);
-
-        CreateProductRequest.ProductCreateCommand command = request.toCommand(sellerId, hubId, companyId);
+        CreateProductRequest.ProductCreateCommand command = request.toCommand(sellerId);
 
         Product product = productService.createProduct(
                 command.getHubId(),
@@ -70,8 +52,6 @@ public class ProducerProductController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ProductResponse.from(product));
     }
-
-    // 나머지 메서드들은 동일...
 
     /**
      * 상품 수정
