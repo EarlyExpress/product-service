@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
  * - 사용자 정보 조회
  */
 @FeignClient(
-        name = "user-service",
-        url = "${user-service.url:http://localhost:8081}"
+        name = "user-service"
+//        url = "${user-service.url:http://localhost:8081}"
 )
 public interface UserServiceClient {
 

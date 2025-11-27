@@ -130,7 +130,7 @@ tasks.named('test') {
 }
 
 // QueryDSL Q클래스 생성 경로 설정
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = layout.buildDirectory.dir("generated/sources/annotationProcessor/java/main")
 
 sourceSets {
     main.java.srcDir querydslDir
